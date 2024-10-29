@@ -24,19 +24,9 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Clean up disk space 
-        run: |              
-             df -h
-             sudo rm -rf /usr/share/dotnet 
-             sudo rm -rf /usr/local/lib/android 
-             sudo rm -rf /opt/ghc 
-             sudo rm -rf /opt/hostedtoolcache/CodeQL 
-             sudo docker image prune --all --force
-             sudo rm -rf /home/linuxbrew
-             df -h
       - name: Setup pmbootstrap
         run: |
-          git clone https://gitlab.com/postmarketOS/pmbootstrap --depth=1
+          git clone https://gitlab.postmarketos.org/postmarketOS/pmbootstrap --depth=1
           cd pmbootstrap
           chmod +x -v pmbootstrap.py
 
