@@ -46,8 +46,7 @@ jobs:
 
       - name: Initialize pmbootstrap with selected device
         run: |
-           sudo aria2c https://github.com/sekaimoe/pmos_ci_build/raw/main/device/${{ inputs.device }}/pmbootstrap_v3.cfg
-           sudo mv -v pmbootstrap_v3.cfg -v /home/runner/.config/pmbootstrap_v3.cfg
+           sudo aria2c https://github.com/sekaimoe/pmos_ci_build/raw/main/device/${{ inputs.device }}/pmbootstrap_v3.cfg -o /home/runner/.config/pmbootstrap_v3.cfg
            sudo chmod 777 -v /home/runner/.config/pmbootstrap_v3.cfg
            yes '' | ./pmbootstrap/pmbootstrap.py --details-to-stdout init
 
