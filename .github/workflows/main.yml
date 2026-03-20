@@ -33,8 +33,8 @@ jobs:
       - name: Setup pmbootstrap config
         run: |
            mkdir -p /home/runner/.config
-           sudo aria2c -d /home/runner/.config -o pmbootstrap_v3.cfg https://github.com/sekaimoe/pmos_ci_build/raw/main/device/${{ inputs.device }}/pmbootstrap_v3.cfg
-           sudo chmod 600 -v /home/runner/.config/pmbootstrap_v3.cfg
+           aria2c -d /home/runner/.config -o pmbootstrap_v3.cfg https://github.com/sekaimoe/pmos_ci_build/raw/main/device/${{ inputs.device }}/pmbootstrap_v3.cfg
+           chmod 644 -v /home/runner/.config/pmbootstrap_v3.cfg
            # Pre-create work directory to avoid interactive prompt
            mkdir -p /home/runner/.local/var/pmbootstrap/cache_git
            echo "8" > /home/runner/.local/var/pmbootstrap/version
@@ -47,7 +47,7 @@ jobs:
         run: |
           if [ ! -d /home/runner/.local/var/pmbootstrap/cache_git/pmaports/device/testing/device-${{ inputs.device }} ]; then
               git clone ${{ inputs.devicesrc }} $HOME/tmp
-              sudo mv -v $HOME/tmp/* /home/runner/.local/var/pmbootstrap/cache_git/pmaports/device/testing
+              mv -v $HOME/tmp/* /home/runner/.local/var/pmbootstrap/cache_git/pmaports/device/testing
               echo "file_changed=true" >> $GITHUB_ENV
           else
               echo "file_changed=false" >> $GITHUB_ENV
