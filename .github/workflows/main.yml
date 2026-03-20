@@ -41,7 +41,7 @@ jobs:
 
       - name: First Initialize pmbootstrap
         run: |
-           ./pmbootstrap/pmbootstrap.py --details-to-stdout --assume-yes init
+           ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout --assume-yes init
 
       - name: Find package
         run: |
@@ -55,36 +55,36 @@ jobs:
 
       - name: Initialize pmbootstrap with selected device
         run: |
-           ./pmbootstrap/pmbootstrap.py --details-to-stdout --assume-yes init
+           ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout --assume-yes init
 
       - name: Build linux package
         if: env.file_changed == 'true'
         run: |
           if [ -d /home/runner/.local/var/pmbootstrap/cache_git/pmaports/device/testing/device-${{ inputs.device }} ]; then
-               ./pmbootstrap/pmbootstrap.py --details-to-stdout checksum linux-${{ inputs.device}}
-               ./pmbootstrap/pmbootstrap.py --details-to-stdout build linux-${{ inputs.device}} --force
+               ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout checksum linux-${{ inputs.device}}
+               ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout build linux-${{ inputs.device}} --force
           fi
 
       - name: Build device package
         if: env.file_changed == 'true'
         run: |
-           ./pmbootstrap/pmbootstrap.py --details-to-stdout checksum device-${{ inputs.device}}
-           ./pmbootstrap/pmbootstrap.py --details-to-stdout build device-${{ inputs.device}} --force
+           ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout checksum device-${{ inputs.device}}
+           ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout build device-${{ inputs.device}} --force
 
       - name: Build firmware package
         if: env.file_changed == 'true'
         run: |
           if [ -d /home/runner/.local/var/pmbootstrap/cache_git/pmaports/device/testing/firmware-${{ inputs.device }} ]; then
-              ./pmbootstrap/pmbootstrap.py --details-to-stdout checksum firmware-${{ inputs.device}}
-              ./pmbootstrap/pmbootstrap.py  --details-to-stdout build firmware-${{ inputs.device}} --force
+              ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout checksum firmware-${{ inputs.device}}
+              ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout build firmware-${{ inputs.device}} --force
           fi
 
       - name: Build rootfs
-        run: yes '123456' | ./pmbootstrap/pmbootstrap.py --details-to-stdout install --android-recovery-zip --recovery-install-partition=data
+        run: yes '123456' | ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout install --android-recovery-zip --recovery-install-partition=data
 
       - name: Export rootfs
         if: github.event_name == 'workflow_dispatch'
-        run: ./pmbootstrap/pmbootstrap.py --details-to-stdout export
+        run: ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout export
 
       - name: Upload log
         if: failure()
