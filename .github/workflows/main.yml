@@ -33,17 +33,17 @@ jobs:
       - name: Setup pmbootstrap config
         run: |
            mkdir -p /home/runner/.config
-           # Download device config BEFORE first init so it's used
+           # Download device config
            aria2c -d /home/runner/.config -o pmbootstrap_v3.cfg https://github.com/sekaimoe/pmos_ci_build/raw/main/device/${{ inputs.device }}/pmbootstrap_v3.cfg
            chmod 644 -v /home/runner/.config/pmbootstrap_v3.cfg
            # Pre-create work directory to avoid interactive prompt
            mkdir -p /home/runner/.local/var/pmbootstrap/cache_git
            echo "8" > /home/runner/.local/var/pmbootstrap/version
 
-      - name: First Initialize pmbootstrap
+      - name: First Initialize pmbootstrap (basic setup)
         run: |
-           # Init will read the cfg file we just downloaded
-           yes '' | ./pmbootstrap/pmbootstrap.py --details-to-stdout init || true
+           # Quick init just to clone pmaports (use qemu which always exists)
+           echo -e '\n\n\n\n\n\n\n\n\n\n' | ./pmbootstrap/pmbootstrap.py --details-to-stdout init || true
 
       - name: Clone device package
         run: |
@@ -57,7 +57,7 @@ jobs:
 
       - name: Re-initialize with device
         run: |
-           # After cloning device, re-init to select the device from cfg
+           # Now device exists, init with our cfg (device, ui, timezone will be loaded correctly)
            yes '' | ./pmbootstrap/pmbootstrap.py --details-to-stdout init || true
 
       - name: Build linux package
