@@ -52,12 +52,13 @@ jobs:
               echo "file_changed=false" >> $GITHUB_ENV
           fi
 
-      - name: Setup device config and re-init
+      - name: Setup device config
         run: |
-           # Now download the real device config and init again
+           # Download device config and set device directly
            aria2c -d /home/runner/.config -o pmbootstrap_v3.cfg https://github.com/sekaimoe/pmos_ci_build/raw/main/device/${{ inputs.device }}/pmbootstrap_v3.cfg
            chmod 644 -v /home/runner/.config/pmbootstrap_v3.cfg
-           yes '' | ./pmbootstrap/pmbootstrap.py --details-to-stdout init
+           # Use config command to set device explicitly (avoid interactive init)
+           ./pmbootstrap/pmbootstrap.py config device ${{ inputs.device }}
 
       - name: Build linux package
         if: env.file_changed == 'true'
