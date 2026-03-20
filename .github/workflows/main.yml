@@ -54,11 +54,14 @@ jobs:
 
       - name: Setup device config
         run: |
-           # Download device config and set device directly
+           # Download device config and apply all settings from it
            aria2c -d /home/runner/.config -o pmbootstrap_v3.cfg https://github.com/sekaimoe/pmos_ci_build/raw/main/device/${{ inputs.device }}/pmbootstrap_v3.cfg
            chmod 644 -v /home/runner/.config/pmbootstrap_v3.cfg
-           # Use config command to set device explicitly (avoid interactive init)
+           # Apply all key settings from cfg file
            ./pmbootstrap/pmbootstrap.py config device ${{ inputs.device }}
+           ./pmbootstrap/pmbootstrap.py config ui $(grep "^ui = " /home/runner/.config/pmbootstrap_v3.cfg | cut -d' ' -f3)
+           ./pmbootstrap/pmbootstrap.py config timezone $(grep "^timezone = " /home/runner/.config/pmbootstrap_v3.cfg | cut -d' ' -f3)
+           ./pmbootstrap/pmbootstrap.py config is_default_channel $(grep "^is_default_channel = " /home/runner/.config/pmbootstrap_v3.cfg | cut -d' ' -f3)
 
       - name: Build linux package
         if: env.file_changed == 'true'
