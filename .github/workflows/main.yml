@@ -30,7 +30,16 @@ jobs:
           cd pmbootstrap
           chmod +x -v pmbootstrap.py
 
-      - name: First Initialize pmbootstrap
+      - name: Setup pmbootstrap config
+        run: |
+           mkdir -p /home/runner/.config
+           sudo aria2c -d /home/runner/.config -o pmbootstrap_v3.cfg https://github.com/sekaimoe/pmos_ci_build/raw/main/device/${{ inputs.device }}/pmbootstrap_v3.cfg
+           sudo chmod 600 -v /home/runner/.config/pmbootstrap_v3.cfg
+           # Pre-create work directory to avoid interactive prompt
+           mkdir -p /home/runner/.local/var/pmbootstrap/cache_git
+           echo "8" > /home/runner/.local/var/pmbootstrap/version
+
+      - name: Initialize pmbootstrap
         run: |
            yes '' | ./pmbootstrap/pmbootstrap.py --details-to-stdout init
 
@@ -43,12 +52,6 @@ jobs:
           else
               echo "file_changed=false" >> $GITHUB_ENV
           fi
-
-      - name: Initialize pmbootstrap with selected device
-        run: |
-           sudo aria2c https://github.com/sekaimoe/pmos_ci_build/raw/main/device/${{ inputs.device }}/pmbootstrap_v3.cfg -o /home/runner/.config/pmbootstrap_v3.cfg
-           sudo chmod 777 -v /home/runner/.config/pmbootstrap_v3.cfg
-           yes '' | ./pmbootstrap/pmbootstrap.py --details-to-stdout init
 
       - name: Build linux package
         if: env.file_changed == 'true'
