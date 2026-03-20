@@ -41,7 +41,7 @@ jobs:
 
       - name: First Initialize pmbootstrap
         run: |
-           ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout --assume-yes init
+           yes "" | ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout --assume-yes init
 
       - name: Find package
         run: |
@@ -55,7 +55,7 @@ jobs:
 
       - name: Initialize pmbootstrap with selected device
         run: |
-           ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout --assume-yes init
+           yes "" | ./pmbootstrap/pmbootstrap.py --work /home/runner/.local/var/pmbootstrap --details-to-stdout --assume-yes init
 
       - name: Build linux package
         if: env.file_changed == 'true'
